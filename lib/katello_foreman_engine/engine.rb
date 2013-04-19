@@ -4,9 +4,10 @@ module KatelloForemanEngine
   class Engine < ::Rails::Engine
 
     config.after_initialize do
-      require 'katello_foreman_engine/bindings'
       require 'katello_foreman_engine/settings'
-      require 'katello_foreman_engine/actions/org_create'
+      Settings.initialize_settings
+      require 'katello_foreman_engine/bindings'
+      Dir[File.expand_path('../actions/*.rb', __FILE__)].each { |f| require f }
     end
 
   end
