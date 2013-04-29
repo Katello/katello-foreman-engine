@@ -8,7 +8,7 @@ module KatelloForemanEngine
 
       def plan(env)
         unless env.library?
-          plan_self 'org_label' => env.organization.label, 'label' => env.label, 'cv_id' => env.default_content_view.id
+          plan_self 'org_label' => env.organization.label, 'label' => env.label, 'cv_id' => 'env'
         end
       end
 

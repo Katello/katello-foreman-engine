@@ -17,9 +17,22 @@ module KatelloForemanEngine
       end
 
       def base
-        base = ForemanApi::Base.new(client_config)
-        base.client.options[:headers][:foreman_user] = 'admin'
-        base
+        resource(ForemanApi::Base)
+      end
+
+      def environment
+        resource(ForemanApi::Resources::Environment)
+      end
+
+      def resource(resource_class)
+        client = resource_class.new(client_config)
+        client.client.options[:headers][:foreman_user] = 'admin'
+        return client
+      end
+
+      def organization_find(name)
+        orgs, _ = base.http_call('get', '/api/organizations', 'search' => "name = #{name}")
+        return orgs.first
       end
 
       def organization_create(name)
@@ -28,9 +41,15 @@ module KatelloForemanEngine
                          :ignore_types => %w[User SmartProxy Subnet ComputeResource Medium ConfigTemplate Domain Environment] })
       end
 
+      def organization_destroy(id)
+        base.http_call('delete', "/api/organizations/#{id}")
+      end
+
+
       def environment_find(org_label, env_label, cv_label = nil)
-        base.http_call('get', '/foreman_katello_engine/api/environments/show',
-                       {:org => org_label, :env => env_label, :cv => cv_label})
+        env, _ = base.http_call('get', '/foreman_katello_engine/api/environments/show',
+                                {:org => org_label, :env => env_label, :cv => cv_label})
+        return env
       rescue RestClient::ResourceNotFound => e
         return nil
       end
@@ -40,8 +59,8 @@ module KatelloForemanEngine
                        {:org => org_label, :env => env_label, :cv => cv_label, :cv_id => cv_id})
       end
 
-      def environment
-        ForemanApi::Resources::Environment.new(client_config)
+      def environment_destroy(id)
+        environment.destroy('id' => id)
       end
 
     end
