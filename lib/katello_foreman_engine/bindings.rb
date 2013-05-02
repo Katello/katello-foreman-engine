@@ -24,6 +24,10 @@ module KatelloForemanEngine
         resource(ForemanApi::Resources::Environment)
       end
 
+      def user
+        resource(ForemanApi::Resources::User)
+      end
+
       def resource(resource_class)
         client = resource_class.new(client_config)
         client.client.options[:headers][:foreman_user] = 'admin'
@@ -61,6 +65,23 @@ module KatelloForemanEngine
 
       def environment_destroy(id)
         environment.destroy('id' => id)
+      end
+
+      def user_find(username)
+        users, _ = user.index('search' => "login = #{username}")
+        return users.first
+      end
+
+      def user_create(username, email)
+        user.create({ 'user' => {
+                        'login' => username,
+                        'mail' => email,
+                        'password' => Password.generate_random_string(25),
+                        'auth_source_id' => 1}})
+      end
+
+      def user_destroy(id)
+        user.destroy('id' => id)
       end
 
     end
