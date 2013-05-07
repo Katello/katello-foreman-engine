@@ -13,5 +13,9 @@ module KatelloForemanEngine
       @settings[key.to_s]
     end
 
+    def self.[]=(key, value)
+      @settings[key.to_s] = value
+    end
+
   end
 end
