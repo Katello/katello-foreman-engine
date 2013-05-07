@@ -59,8 +59,11 @@ module KatelloForemanEngine
       end
 
       def environment_create(cv_id, org_label, env_label, cv_label = nil)
-        base.http_call('post', '/foreman_katello_engine/api/environments',
-                       {:org => org_label, :env => env_label, :cv => cv_label, :cv_id => cv_id})
+        params = {:org => org_label, :env => env_label, :cv => cv_label, :cv_id => cv_id}
+        if foreman_org = organization_find("KT-[#{org_label}]")
+          params[:org_id] = foreman_org['organization']['id']
+        end
+        base.http_call('post', '/foreman_katello_engine/api/environments', params)
       end
 
       def environment_destroy(id)
