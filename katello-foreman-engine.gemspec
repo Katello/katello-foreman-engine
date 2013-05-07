@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
 
   s.authors = ["Katello"]
   s.date = "2013-04-19"
-  s.description = "Foreman specific parts Katello"
+  s.description = "Foreman specific parts in Katello"
   s.email = "katello-devel@redhat.com"
   s.files = `git ls-files`.split("\n")
   s.homepage = "http://github.com/katello/katello-foreman-engine"
