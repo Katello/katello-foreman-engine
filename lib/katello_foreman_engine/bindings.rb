@@ -24,13 +24,19 @@ module KatelloForemanEngine
         resource(ForemanApi::Resources::Environment)
       end
 
-      def user
-        resource(ForemanApi::Resources::User)
+      def user(username = nil)
+        user_resource = resource(ForemanApi::Resources::User)
+        if username && User.current.username == username
+          # this means the first user is created: use the predefined
+          # Foreman admin user for this cases.
+          user_resource.client.options[:headers][:foreman_user] = 'admin'
+        end
+        return user_resource
       end
 
       def resource(resource_class)
         client = resource_class.new(client_config)
-        client.client.options[:headers][:foreman_user] = 'admin'
+        client.client.options[:headers][:foreman_user] = User.current.username
         return client
       end
 
@@ -50,16 +56,16 @@ module KatelloForemanEngine
       end
 
 
-      def environment_find(org_label, env_label, cv_label = nil)
+      def environment_find(org_label, env_label, content_view_label = nil)
         env, _ = base.http_call('get', '/foreman_katello_engine/api/environments/show',
-                                {:org => org_label, :env => env_label, :cv => cv_label})
+                                {:org => org_label, :env => env_label, :content_view => content_view_label})
         return env
       rescue RestClient::ResourceNotFound => e
         return nil
       end
 
-      def environment_create(cv_id, org_label, env_label, cv_label = nil)
-        params = {:org => org_label, :env => env_label, :cv => cv_label, :cv_id => cv_id}
+      def environment_create(content_view_id, org_label, env_label, content_view_label = nil)
+        params = {:org => org_label, :env => env_label, :content_view => content_view_label, :content_view_id => content_view_id}
         if foreman_org = organization_find("KT-[#{org_label}]")
           params[:org_id] = foreman_org['organization']['id']
         end
@@ -71,16 +77,16 @@ module KatelloForemanEngine
       end
 
       def user_find(username)
-        users, _ = user.index('search' => "login = #{username}")
+        users, _ = user(username).index('search' => "login = #{username}")
         return users.first
       end
 
       def user_create(username, email)
-        user.create({ 'user' => {
-                        'login' => username,
-                        'mail' => email,
-                        'password' => Password.generate_random_string(25),
-                        'auth_source_id' => 1}})
+        user(username).create({ 'user' => {
+                                  'login' => username,
+                                  'mail' => email,
+                                  'password' => Password.generate_random_string(25),
+                                  'auth_source_id' => 1}})
       end
 
       def user_destroy(id)
