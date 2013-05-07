@@ -31,11 +31,6 @@ namespace :test do
       puts 'Preparing settings file'
       File.open(settings_file, "w") { |f| f << <<SETTINGS }
 common:
-  database:
-    host: kat44.inecas.cz
-    database: kf_test
-    username: postgres
-    password: postgres
   foreman:
     url: https://localhost/foreman/
 
