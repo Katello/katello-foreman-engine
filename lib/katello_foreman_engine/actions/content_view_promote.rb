@@ -6,9 +6,12 @@ module KatelloForemanEngine
         Katello::Actions::ContentViewPromote
       end
 
-      def plan(*args)
+      def plan(content_view, from_env, to_env)
         unless Bindings.environment_find(input['organization_label'], input['to_env_label'], input['label'])
           plan_self input
+        end
+        content_view.repos(to_env) do |repo|
+          plan_action(RepositoryChange, repo)
         end
       end
 

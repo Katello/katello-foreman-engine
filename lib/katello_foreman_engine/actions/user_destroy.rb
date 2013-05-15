@@ -8,7 +8,7 @@ module KatelloForemanEngine
 
       def plan(user)
         if foreman_user = Bindings.user_find(input['username'])
-          plan_self 'foreman_user_id' => foreman_user['user']['id']
+          plan_self 'foreman_user_id' => foreman_user['id']
         end
       end
 

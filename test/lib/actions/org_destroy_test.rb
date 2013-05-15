@@ -7,14 +7,12 @@ module KatelloForemanEngine
       test "runs only when the org is present in Foreman" do
         foreman_org = { 'organization' => { 'id' => '123' } }
         Bindings.expects(:organization_find).with('KT-[test]').returns(foreman_org)
-        plan = prepare_plan(OrgDestroy, {'label' => 'test'}, nil)
-        step = plan.run_steps.first
+        step = run_steps(OrgDestroy, {'label' => 'test'}, nil).first
         assert_equal OrgDestroy, step.action_class
         assert_equal step.input['foreman_id'], '123'
 
         Bindings.expects(:organization_find).returns(nil)
-        plan = prepare_plan(OrgDestroy, {'label' => 'test'}, nil)
-        assert_equal [], plan.run_steps
+        assert_equal [], run_steps(OrgDestroy, {'label' => 'test'}, nil)
       end
 
       test 'calls bindings to destroy organization' do

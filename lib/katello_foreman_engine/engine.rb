@@ -4,6 +4,7 @@ module KatelloForemanEngine
   class Engine < ::Rails::Engine
 
     config.after_initialize do
+      require 'katello_foreman_engine/helpers'
       require 'katello_foreman_engine/settings'
       Settings.initialize_settings
       require 'katello_foreman_engine/bindings'

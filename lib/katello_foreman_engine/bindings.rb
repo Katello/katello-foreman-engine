@@ -24,6 +24,26 @@ module KatelloForemanEngine
         resource(ForemanApi::Resources::Environment)
       end
 
+      def architecture
+        resource(ForemanApi::Resources::Architecture)
+      end
+
+      def ptable
+        resource(ForemanApi::Resources::Ptable)
+      end
+
+      def operating_system
+        resource(ForemanApi::Resources::OperatingSystem)
+      end
+
+      def config_template
+        resource(ForemanApi::Resources::ConfigTemplate)
+      end
+
+      def medium
+        resource(ForemanApi::Resources::Medium)
+      end
+
       def user(username = nil)
         user_resource = resource(ForemanApi::Resources::User)
         if username && User.current.username == username
@@ -32,12 +52,6 @@ module KatelloForemanEngine
           user_resource.client.options[:headers][:foreman_user] = 'admin'
         end
         return user_resource
-      end
-
-      def resource(resource_class)
-        client = resource_class.new(client_config)
-        client.client.options[:headers][:foreman_user] = User.current.username
-        return client
       end
 
       def organization_find(name)
@@ -77,8 +91,7 @@ module KatelloForemanEngine
       end
 
       def user_find(username)
-        users, _ = user(username).index('search' => "login = #{username}")
-        return users.first
+        find_resource(user(username), "login = #{username}")
       end
 
       def user_create(username, email)
@@ -91,6 +104,121 @@ module KatelloForemanEngine
 
       def user_destroy(id)
         user.destroy('id' => id)
+      end
+
+      def architecture_find(name)
+        find_resource(architecture, "name = #{name}")
+      end
+
+      def architecture_create(name)
+        without_root_key { architecture.create('architecture' => {'name' => name}) }
+      end
+
+      def operating_system_find(name, major, minor)
+        find_resource(operating_system, "name = #{name} AND major = #{major} AND minor = #{minor}")
+      end
+
+      def operating_system_create(name, major, minor)
+        data = {
+          'name' => name,
+          'major' => major.to_s,
+          'minor' => minor.to_s,
+          'family' => Settings['foreman_os_family']
+        }
+        templates_to_add = [template_find(Settings['foreman_os_provisioning_template']),
+                            template_find(Settings['foreman_os_pxe_template'])].compact
+        data['os_default_templates_attributes'] = templates_to_add.map do |template|
+          {
+            "config_template_id" => template["id"],
+            "template_kind_id" => template["template_kind"]["id"],
+          }
+        end
+
+        if ptable = ptable_find(Settings['foreman_os_ptable'])
+          data['ptable_ids'] = [ptable['id']]
+        end
+
+        os = without_root_key { operating_system.create('operatingsystem' => data) }
+
+        oss, _ = operating_system.index
+        os_ids = oss.map { |o| o['operatingsystem']['id'] }
+        templates_to_add.each do |template|
+          # Because of http://projects.theforeman.org/issues/2500 we
+          # have not way to add only the created os to the template.
+          # As a workaround, we add all os to the template for now.
+          config_template.update("id" => template['id'],
+                                 'config_template' => {
+                                   "operatingsystem_ids" => os_ids
+                                 })
+        end
+        return os
+      end
+
+      def operating_system_update(id, data)
+        without_root_key do
+          operating_system.update('id' => id, 'operatingsystem' => data)
+        end
+      end
+
+      def template_find(name)
+        find_resource(config_template, %{name = "#{name}"})
+      end
+
+      def medium_find(path)
+        find_resource(medium, %{path = "#{path}"})
+      end
+
+      def medium_create(name, path)
+        without_root_key do
+          self.medium.create('medium' => {
+                               'name' => name,
+                               'path' => path,
+                               'os_family' => Settings['foreman_os_family']})
+        end
+      end
+
+      def medium_destroy(id)
+        self.medium.destroy('id' => id)
+      end
+
+      def ptable_find(name)
+        find_resource(ptable, %{name = "#{name}"})
+      end
+
+      private
+
+      # configure resource client to be used to call Foreman.
+      # We need to do this for every resoruce right now.
+      # We might improve this on foreman_api side later.
+      def resource(resource_class)
+        client = resource_class.new(client_config)
+        client.client.options[:headers][:foreman_user] = User.current.username
+        return client
+      end
+
+      # From Foreman, the resource comes in form:
+      #
+      #   { 'resource' => { 'attr1' => 'val1', 'attr2' => 'val2' } }
+      #
+      # this method returns only the body, i.e.:
+      #
+      #   { 'attr1' => 'val1', 'attr2' => 'val2' }
+      #
+      # If block given, it expects the call to foreman_api from that
+      #
+      # We might improve this on foreman_api side later
+      def without_root_key(resource_hash = nil, &block)
+        if block
+          resource_hash, _ = yield
+        end
+        if resource_hash
+          resource_hash.values.first
+        end
+      end
+
+      def find_resource(resource, search_query)
+        results, _ =  resource.index('search' => search_query)
+        return without_root_key(results.first)
       end
 
     end
