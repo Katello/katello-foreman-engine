@@ -94,11 +94,12 @@ module KatelloForemanEngine
         find_resource(user(username), "login = #{username}")
       end
 
-      def user_create(username, email)
+      def user_create(username, email, admin)
         user(username).create({ 'user' => {
                                   'login' => username,
                                   'mail' => email,
                                   'password' => Password.generate_random_string(25),
+                                  'admin' => admin,
                                   'auth_source_id' => 1}})
       end
 
