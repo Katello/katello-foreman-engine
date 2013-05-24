@@ -13,7 +13,7 @@ module KatelloForemanEngine
       end
 
       def run
-        Bindings.user_create(input['username'], input['email'])
+        Bindings.user_create(input['username'], input['email'], input['admin'])
       end
     end
   end
