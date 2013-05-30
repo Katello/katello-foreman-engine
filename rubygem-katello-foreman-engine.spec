@@ -74,6 +74,9 @@ GEMFILE
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Thu May 30 2013 Ivan Necas <inecas@redhat.com> 0.0.3-2
+- Fix package building (inecas@redhat.com)
+
 * Thu May 30 2013 Ivan Necas <inecas@redhat.com> 0.0.3-1
 - Katello admins are admins in foreman too (mhulan@redhat.com)
 
