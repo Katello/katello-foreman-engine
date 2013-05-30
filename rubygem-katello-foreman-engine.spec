@@ -9,7 +9,7 @@
 Summary: Foreman specific parts of Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 Version: 0.0.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: Development/Libraries
 License: GPLv2
 URL: http://github.com/Katello/katello-foreman-engine
@@ -59,20 +59,16 @@ GEMFILE
 %files
 %dir %{gem_instdir}
 %{gem_instdir}/lib
-%{gem_instdir}/script
 %exclude %{gem_cache}
 %{gem_spec}
 %{katello_bundlerd_dir}/foreman.rb
 %doc %{gem_instdir}/LICENSE
 
-%exclude %{gem_instdir}/.gitignore
 %exclude %{gem_instdir}/test
-#%exclude %{gem_instdir}/.travis.yml
 %exclude %{gem_dir}/cache/%{gem_name}-%{version}.gem
 
 %files doc
 %doc %{gem_instdir}/LICENSE
-#%doc %{gem_instdir}/README.md
 %{gem_instdir}/Rakefile
 %{gem_instdir}/Gemfile
 %{gem_instdir}/%{gem_name}.gemspec
