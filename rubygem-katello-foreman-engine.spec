@@ -8,7 +8,7 @@
 
 Summary: Foreman specific parts of Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
-Version: 0.0.2
+Version: 0.0.3
 Release: 1%{?dist}
 Group: Development/Libraries
 License: GPLv2
@@ -78,6 +78,9 @@ GEMFILE
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Thu May 30 2013 Ivan Necas <inecas@redhat.com> 0.0.3-1
+- Katello admins are admins in foreman too (mhulan@redhat.com)
+
 * Fri May 17 2013 Ivan Necas <inecas@redhat.com> 0.0.2-1
 - Installation media integration (inecas@redhat.com)
 
