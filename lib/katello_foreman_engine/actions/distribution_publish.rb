@@ -21,12 +21,13 @@ module KatelloForemanEngine
       def run
         medium_name = construct_medium_name
         medium_path = Helpers.installation_media_path(input['repo']['uri'])
+        org_label = input['repo']['organization_label']
         return if Bindings.medium_find(medium_path)
 
         arch = find_or_create_arch
         os = find_or_create_operating_system
         assign_arch_to_os(os, arch)
-        medium = Bindings.medium_create(medium_name, medium_path)
+        medium = Bindings.medium_create(medium_name, medium_path, org_label)
         assign_medium_to_os(os, medium)
       end
 
