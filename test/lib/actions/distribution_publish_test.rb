@@ -30,6 +30,9 @@ module KatelloForemanEngine
 
         @arch_output = {'architecture' => { 'id' => 1, 'name' => @arch }}
         @ptable_output = {'ptable' => { 'id' => 1, 'name' => 'RedHat default' }}
+        @organization_output = {
+          'organization' => { 'id' => 1 }
+        }
         @os_output = {
           'operatingsystem' => {
             'id' => 1,
@@ -50,6 +53,7 @@ module KatelloForemanEngine
           }
         }
 
+        Bindings.expects(:organization_find).with('Org').returns(@organization_output)
         stub_foreman_search(:architecture, "name = #{@arch}", @arch_output)
         stub_foreman_search(:ptable, %{name = "RedHat default"}, @ptable_output)
         stub_foreman_call(:medium, :index, nil, [])
@@ -113,7 +117,13 @@ module KatelloForemanEngine
       end
 
       test "creates medium and assigns it to the os in not created yet" do
-        expect_foreman_call(:medium, :create, {'name' => @medium_name, 'path' => @medium_path, 'os_family' => 'Redhat'}, @medium_output)
+        medium_params = {
+          'name' => @medium_name,
+          'path' => @medium_path,
+          'os_family' => 'Redhat',
+          'organization_ids' => [1],
+        }
+        expect_foreman_call(:medium, :create, medium_params, @medium_output)
         expected_data = {'id' => 1, 'medium_ids' => [@medium_output['medium']['id']]}
         expect_foreman_call(:operating_system, :update,  expected_data)
         run_action

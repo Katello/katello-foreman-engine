@@ -11,7 +11,7 @@ module KatelloForemanEngine
       end
 
       def plan(org)
-        if foreman_org = Bindings.organization_find("KT-[#{input['label']}]")
+        if foreman_org = Bindings.organization_find(input['label'])
           plan_self('foreman_id' => foreman_org['organization']['id'])
         end
       end
