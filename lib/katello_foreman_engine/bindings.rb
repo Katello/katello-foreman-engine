@@ -62,7 +62,7 @@ module KatelloForemanEngine
       def organization_create(name)
         base.http_call('post', '/api/organizations',
                        :organization => {:name => name,
-                         :ignore_types => %w[User SmartProxy Subnet ComputeResource Medium ConfigTemplate Domain Environment] })
+                         :ignore_types => %w[User SmartProxy Subnet ComputeResource Medium ConfigTemplate Domain] })
       end
 
       def organization_destroy(id)
