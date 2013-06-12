@@ -6,7 +6,7 @@ module KatelloForemanEngine
 
       test "runs only when the org is present in Foreman" do
         foreman_org = { 'organization' => { 'id' => '123' } }
-        Bindings.expects(:organization_find).with('KT-[test]').returns(foreman_org)
+        Bindings.expects(:organization_find).with('test').returns(foreman_org)
         step = run_steps(OrgDestroy, {'label' => 'test'}, nil).first
         assert_equal OrgDestroy, step.action_class
         assert_equal step.input['foreman_id'], '123'

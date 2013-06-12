@@ -54,7 +54,8 @@ module KatelloForemanEngine
         return user_resource
       end
 
-      def organization_find(name)
+      def organization_find(kt_label)
+        name = "KT-[#{kt_label}]"
         orgs, _ = base.http_call('get', '/api/organizations', 'search' => "name = #{name}")
         return orgs.first
       end
@@ -62,7 +63,7 @@ module KatelloForemanEngine
       def organization_create(name)
         base.http_call('post', '/api/organizations',
                        :organization => {:name => name,
-                         :ignore_types => %w[User SmartProxy Subnet ComputeResource Medium ConfigTemplate Domain Environment] })
+                         :ignore_types => %w[User SmartProxy Subnet ComputeResource ConfigTemplate Domain] })
       end
 
       def organization_destroy(id)
@@ -80,7 +81,7 @@ module KatelloForemanEngine
 
       def environment_create(content_view_id, org_label, env_label, content_view_label = nil)
         params = {:org => org_label, :env => env_label, :content_view => content_view_label, :content_view_id => content_view_id}
-        if foreman_org = organization_find("KT-[#{org_label}]")
+        if foreman_org = organization_find(org_label)
           params[:org_id] = foreman_org['organization']['id']
         end
         base.http_call('post', '/foreman_katello_engine/api/environments', params)
@@ -169,12 +170,17 @@ module KatelloForemanEngine
         find_resource(medium, %{path = "#{path}"})
       end
 
-      def medium_create(name, path)
+      def medium_create(name, path, org_label)
+        params = {
+          'name' => name,
+          'path' => path,
+          'os_family' => Settings['foreman_os_family']
+        }
+        if foreman_org = organization_find(org_label)
+          params['organization_ids'] = [foreman_org['organization']['id']]
+        end
         without_root_key do
-          self.medium.create('medium' => {
-                               'name' => name,
-                               'path' => path,
-                               'os_family' => Settings['foreman_os_family']})
+          self.medium.create('medium' => params)
         end
       end
 
