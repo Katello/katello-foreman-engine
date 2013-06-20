@@ -53,7 +53,7 @@ module KatelloForemanEngine
           }
         }
 
-        Bindings.expects(:organization_find).with('Org').returns(@organization_output)
+        Bindings.stubs(:organization_find).with('Org').returns(@organization_output)
         stub_foreman_search(:architecture, "name = #{@arch}", @arch_output)
         stub_foreman_search(:ptable, %{name = "RedHat default"}, @ptable_output)
         stub_foreman_call(:medium, :index, nil, [])
@@ -127,6 +127,15 @@ module KatelloForemanEngine
         expected_data = {'id' => 1, 'medium_ids' => [@medium_output['medium']['id']]}
         expect_foreman_call(:operating_system, :update,  expected_data)
         run_action
+      end
+
+      test "it constructs medium name that foreman accepts" do
+        action = DistributionPublish.new(@input)
+        assert_equal 'Org/Env RHEL Server 6.3 x86_64', action.send(:construct_medium_name)
+
+        @input['variant'] = ''
+        @input['arch'] = nil
+        assert_equal 'Org/Env RHEL 6.3', action.send(:construct_medium_name)
       end
 
     end
