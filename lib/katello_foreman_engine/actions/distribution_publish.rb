@@ -89,7 +89,7 @@ module KatelloForemanEngine
         parts << input['variant']
         parts << input['version']
         parts << input['arch']
-        name = parts.join(' ')
+        name = parts.reject(&:blank?).join(' ')
         # we need to make the name a bit shorter to get under 50
         # charatcers for medium name
         name.sub!('Red Hat Enterprise Linux','RHEL')
