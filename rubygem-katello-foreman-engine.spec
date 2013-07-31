@@ -8,8 +8,8 @@
 
 Summary: Foreman specific parts of Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
-Version: 0.0.3
-Release: 2%{?dist}
+Version: 0.0.4
+Release: 1%{?dist}
 Group: Development/Libraries
 License: GPLv2
 URL: http://github.com/Katello/katello-foreman-engine
@@ -74,6 +74,13 @@ GEMFILE
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Wed Jul 31 2013 Partha Aji <paji@redhat.com> 0.0.4-1
+- 976373 - make sure we reduce white spaces for installation media
+  (inecas@redhat.com)
+- 973176 - scope media by organizations in Foreman (inecas@redhat.com)
+- 973176 - scope environments by organizations in Foreman (inecas@redhat.com)
+- ruby193-build is not really required for tagging (inecas@redhat.com)
+
 * Thu May 30 2013 Ivan Necas <inecas@redhat.com> 0.0.3-2
 - Fix package building (inecas@redhat.com)
 
