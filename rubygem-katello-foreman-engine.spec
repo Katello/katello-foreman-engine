@@ -8,7 +8,7 @@
 
 Summary: Foreman specific parts of Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
-Version: 0.0.4
+Version: 0.0.5
 Release: 1%{?dist}
 Group: Development/Libraries
 License: GPLv2
@@ -74,6 +74,9 @@ GEMFILE
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Wed Jul 31 2013 Partha Aji <paji@redhat.com> 0.0.5-1
+- Version Bump (paji@redhat.com)
+
 * Wed Jul 31 2013 Partha Aji <paji@redhat.com> 0.0.4-1
 - 976373 - make sure we reduce white spaces for installation media
   (inecas@redhat.com)
