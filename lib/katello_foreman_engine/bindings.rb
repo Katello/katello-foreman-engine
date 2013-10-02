@@ -117,7 +117,7 @@ module KatelloForemanEngine
       end
 
       def operating_system_find(name, major, minor)
-        find_resource(operating_system, "name = #{name} AND major = #{major} AND minor = #{minor}")
+        find_resource(operating_system, %{name = "#{name}" AND major = "#{major}" AND minor = "#{minor}"})
       end
 
       def operating_system_create(name, major, minor)

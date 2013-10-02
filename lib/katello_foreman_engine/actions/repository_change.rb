@@ -15,6 +15,10 @@ module KatelloForemanEngine
 
     class RepositoryChange < Dynflow::Action
 
+      def self.subscribe
+        [Katello::Actions::RepositorySync]
+      end
+
       def plan(repo)
         if repo.distributions.empty?
           # no distributions, no instalation media
