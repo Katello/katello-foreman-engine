@@ -102,14 +102,20 @@ module KatelloForemanEngine
         parts << input['version']
         parts << input['arch']
         name = parts.reject(&:blank?).join(' ')
-        # we need to make the name a bit shorter to get under 50
-        # charatcers for medium name
-        name.sub!('Red Hat Enterprise Linux','RHEL')
-        return name
+        return normalize_name(name)
       end
 
       def construct_operating_system_name
-        [input['family'], input['variant']].join(' ').gsub(' ', '_')
+        if input['family'].include? 'Red Hat'
+          return 'RedHat'
+        else
+          return input['family'].gsub(' ', '_')
+        end
+      end
+
+      # Foreman and Puppet uses RedHat name for Red Hat Enterprise Linux
+      def normalize_name(name)
+        name.sub('Red Hat Enterprise Linux','RedHat')
       end
 
     end

@@ -21,11 +21,11 @@ module KatelloForemanEngine
         }
 
         @arch = 'x86_64'
-        @os_name = 'Red_Hat_Enterprise_Linux_Server'
+        @os_name = 'RedHat'
         @os_major = '6'
         @os_minor = '3'
 
-        @medium_name = 'Org/Env Red Hat Enterprise Linux Server 6.3 x86_64'
+        @medium_name = 'Org/Env RedHat Server 6.3 x86_64'
         @medium_path = 'http://example.com/pulp/repos/os/'
 
         @arch_output = {'architecture' => { 'id' => 1, 'name' => @arch }}
@@ -131,11 +131,11 @@ module KatelloForemanEngine
 
       test "it constructs medium name that foreman accepts" do
         action = DistributionPublish.new(@input)
-        assert_equal 'Org/Env RHEL Server 6.3 x86_64', action.send(:construct_medium_name)
+        assert_equal 'Org/Env RedHat Server 6.3 x86_64', action.send(:construct_medium_name)
 
         @input['variant'] = ''
         @input['arch'] = nil
-        assert_equal 'Org/Env RHEL 6.3', action.send(:construct_medium_name)
+        assert_equal 'Org/Env RedHat 6.3', action.send(:construct_medium_name)
       end
 
     end
