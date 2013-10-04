@@ -117,7 +117,7 @@ module KatelloForemanEngine
       end
 
       def operating_system_find(name, major, minor)
-        find_resource(operating_system, "name = #{name} AND major = #{major} AND minor = #{minor}")
+        find_resource(operating_system, %{name = "#{name}" AND major = "#{major}" AND minor = "#{minor}"})
       end
 
       def operating_system_create(name, major, minor)
@@ -127,7 +127,12 @@ module KatelloForemanEngine
           'minor' => minor.to_s,
           'family' => Settings['foreman_os_family']
         }
-        templates_to_add = [template_find(Settings['foreman_os_provisioning_template']),
+        provisioning_template_name = if name == 'RedHat'
+                                       Settings['foreman_os_rhel_provisioning_template']
+                                     else
+                                       Settings['foreman_os_provisioning_template']
+                                     end
+        templates_to_add = [template_find(provisioning_template_name),
                             template_find(Settings['foreman_os_pxe_template'])].compact
         data['os_default_templates_attributes'] = templates_to_add.map do |template|
           {

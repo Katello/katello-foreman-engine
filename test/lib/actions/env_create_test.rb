@@ -4,7 +4,7 @@ module KatelloForemanEngine
   module Actions
     class EnvCreateTest < ActiveSupport::TestCase
 
-      test "doesn't run for library" do
+      test "runs both for library and non-library envs " do
         org = Organization.new(:label => 'org')
         env = KTEnvironment.new(:label => 'dev')
         env.organization = org
@@ -17,7 +17,11 @@ module KatelloForemanEngine
         assert_equal 'env', step.input['content_view_id']
 
         env.library = true
-        assert_equal [], run_steps(EnvironmentCreate, {}, env)
+        step = run_steps(EnvironmentCreate, {}, env).first
+        assert_equal EnvironmentCreate, step.action_class
+        assert_equal 'org', step.input['org_label']
+        assert_equal 'dev', step.input['label']
+        assert_equal 'env', step.input['content_view_id']
       end
 
       test 'calls bindings to create environment' do

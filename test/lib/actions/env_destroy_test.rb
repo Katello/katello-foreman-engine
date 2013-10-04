@@ -10,7 +10,8 @@ module KatelloForemanEngine
         env.organization = org
 
         foreman_env = { 'environment' => { 'id' => '123' } }
-        Bindings.expects(:environment_find).with('org', 'dev').returns(foreman_env)
+        Bindings.expects(:environment_find).with('org', 'dev').
+            times(2).returns(foreman_env)
 
         env.library = false
         step = run_steps(EnvironmentDestroy,{}, env).first
@@ -18,7 +19,9 @@ module KatelloForemanEngine
         assert_equal step.input['foreman_id'], '123'
 
         env.library = true
-        assert_equal [], run_steps(EnvironmentDestroy,{}, env)
+        step = run_steps(EnvironmentDestroy,{}, env).first
+        assert_equal EnvironmentDestroy, step.action_class
+        assert_equal step.input['foreman_id'], '123'
 
         env.library = false
         Bindings.expects(:environment_find).returns(nil)

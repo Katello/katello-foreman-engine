@@ -12,17 +12,18 @@
 
 module KatelloForemanEngine
   module Actions
-    class ContentViewPromote < Dynflow::Action
+    class ContentViewPublish < Dynflow::Action
 
       def self.subscribe
-        Katello::Actions::ContentViewPromote
+        [Katello::Actions::ContentViewPublish,
+         Katello::Actions::ContentViewRefresh]
       end
 
-      def plan(content_view, from_env, to_env)
-        unless Bindings.environment_find(input['organization_label'], input['to_env_label'], input['label'])
+      def plan(content_view)
+        unless Bindings.environment_find(input['organization_label'], 'Library', input['label'])
           plan_self input
         end
-        content_view.repos(to_env).each do |repo|
+        content_view.repos(content_view.organization.library).each do |repo|
           plan_action(RepositoryChange, repo)
         end
       end
@@ -31,12 +32,10 @@ module KatelloForemanEngine
         param :id, Integer
         param :label, String
         param :organization_label, String
-        param :from_env_label, String
-        param :to_env_label, String
       end
 
       def run
-        Bindings.environment_create(input['id'], input['organization_label'], input['to_env_label'], input['label'])
+        Bindings.environment_create(input['id'], input['organization_label'], 'Library', input['label'])
       end
     end
   end
