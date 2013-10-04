@@ -61,7 +61,7 @@ module KatelloForemanEngine
         stub_foreman_call(:operating_system, :index, nil, [])
         stub_foreman_call(:operating_system, :create, nil, @os_output)
         stub_foreman_call(:operating_system, :update)
-        stub_foreman_search(:config_template, %{name = "Katello Kickstart Default"}, nil)
+        stub_foreman_search(:config_template, %{name = "Katello Kickstart Default for RHEL"}, nil)
         stub_foreman_search(:config_template, %{name = "Kickstart default PXElinux"}, nil)
         stub_foreman_search(:ptable, %{name = "RedHat default"}, nil)
         stub_foreman_call(:operating_system, :index, nil, [])

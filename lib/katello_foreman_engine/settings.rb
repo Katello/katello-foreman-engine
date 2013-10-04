@@ -8,6 +8,7 @@ module KatelloForemanEngine
         'oauth_consumer_secret' => Katello.config.foreman.oauth_secret,
         # TODO: make the following options configurable:
         'foreman_os_family' => 'Redhat',
+        'foreman_os_rhel_provisioning_template' => 'Katello Kickstart Default for RHEL',
         'foreman_os_provisioning_template' => 'Katello Kickstart Default',
         'foreman_os_pxe_template' => 'Kickstart default PXElinux',
         'foreman_os_ptable' => 'RedHat default',
