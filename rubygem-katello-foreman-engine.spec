@@ -8,7 +8,7 @@
 
 Summary: Foreman specific parts of Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
-Version: 0.0.5
+Version: 0.0.7
 Release: 1%{?dist}
 Group: Development/Libraries
 License: GPLv2
@@ -74,6 +74,12 @@ GEMFILE
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Sun Oct 06 2013 Ivan Necas <inecas@redhat.com> 0.0.7-1
+- 976418 - use different provisioning template based on the OS
+  (inecas@redhat.com)
+- 1014489 - Make the operating system name Puppet friendly (inecas@redhat.com)
+- 1011954 - create entities for library content in Foreman (inecas@redhat.com)
+
 * Wed Jul 31 2013 Partha Aji <paji@redhat.com> 0.0.5-1
 - Version Bump (paji@redhat.com)
 
