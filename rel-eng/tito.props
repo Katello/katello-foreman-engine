@@ -11,5 +11,8 @@ scl = ruby193
 [katello-nightly-fedora18]
 disttag = .fc18
 
+[katello-nightly-fedora19]
+disttag = .fc19
+
 [requirements]
 tito=0.4.12
