@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "katello-foreman-engine"
-  s.version = "0.0.7"
+  s.version = "0.0.9"
 
   s.authors = ["Katello"]
   s.date = "2013-04-19"
