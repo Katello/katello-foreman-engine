@@ -8,7 +8,7 @@
 
 Summary: Foreman specific parts of Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
-Version: 0.0.9
+Version: 0.0.10
 Release: 1%{?dist}
 Group: Development/Libraries
 License: GPLv2
@@ -84,6 +84,8 @@ GEMFILE
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Fri Oct 11 2013 Partha Aji <paji@redhat.com> 0.0.10-1
+
 * Fri Oct 11 2013 Partha Aji <paji@redhat.com> 0.0.9-1
 
 * Fri Oct 11 2013 Partha Aji <paji@redhat.com> 0.0.8-1
