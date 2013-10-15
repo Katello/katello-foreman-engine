@@ -12,24 +12,16 @@
 
 module KatelloForemanEngine
   module Actions
-    class EnvironmentCreate < Dynflow::Action
+    class ContentViewCreate < Dynflow::Action
 
       def self.subscribe
-        Katello::Actions::EnvironmentCreate
+        Katello::Actions::ContentViewCreate
       end
 
-      def plan(env)
-        plan_self 'org_label' => env.organization.label, 'label' => env.label, 'content_view_id' => 'env'
-      end
-
-      input_format do
-        param :org_label, String
-        param :label, String
-        param :content_view_id, String
-      end
-
-      def run
-        Bindings.environment_create(input['content_view_id'], input['org_label'], input['label'])
+      def plan(content_view)
+        if content_view.default?
+          plan_action ContentViewPublish, content_view
+        end
       end
     end
   end
