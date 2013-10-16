@@ -20,8 +20,10 @@ module KatelloForemanEngine
       end
 
       def plan(content_view)
-        unless Bindings.environment_find(input['organization_label'], 'Library', input['label'])
-          plan_self input
+        unless Bindings.environment_find(content_view.organization.label, 'Library', content_view.label) 
+          plan_self('id' => content_view.id,
+                    'label' => content_view.label,
+                    'organization_label' => content_view.organization.label)
         end
         content_view.repos(content_view.organization.library).each do |repo|
           plan_action(RepositoryChange, repo)
