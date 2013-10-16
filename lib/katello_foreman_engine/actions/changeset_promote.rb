@@ -20,6 +20,8 @@ module KatelloForemanEngine
       end
 
       def plan(changeset)
+        # demotion is handed by DistributionUnpublish action
+        return unless changeset.is_a? PromotionChangeset
         changeset.affected_repos.each do |repo|
           repo = repo.get_clone(changeset.environment)
           plan_action(RepositoryChange, repo)
