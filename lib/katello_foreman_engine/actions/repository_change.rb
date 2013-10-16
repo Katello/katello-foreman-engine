@@ -20,10 +20,7 @@ module KatelloForemanEngine
       end
 
       def plan(repo)
-        if repo.distributions.empty?
-          # no distributions, no instalation media
-          plan_action(DistributionUnpublish, repo)
-        elsif(repo.unprotected)
+        if distribution = bootable_distribution(repo)
           repo_info = {
             'pulp_id' => repo.pulp_id,
             'uri' => repo.uri,
@@ -37,15 +34,26 @@ module KatelloForemanEngine
             repo_info['content_view_label'] = repo.content_view.label
           end
 
-          # Foreman's installation media don't distinguish between
-          # different variants. Using just a first one.
-          distribution = repo.distributions.first
           plan_action(DistributionPublish,
                       { 'repo' => repo_info,
                         'family' => distribution.family,
                         'variant' => distribution.variant,
                         'arch' => distribution.arch,
                         'version' => distribution.version })
+        else
+          plan_action(DistributionUnpublish, repo)
+        end
+      end
+
+      def bootable_distribution(repo)
+        return unless repo.unprotected
+        # not every distribution from Pulp represents a bottable
+        # repo. Determine based on the files in there.
+        return repo.distributions.find do |distribution|
+          distribution.files.any? do |file|
+            file[:relativepath].include?("vmlinuz") ||
+                file[:relativepath].include?("pxeboot")
+          end
         end
       end
 
