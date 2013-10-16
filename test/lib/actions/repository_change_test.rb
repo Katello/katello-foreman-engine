@@ -9,7 +9,8 @@ module KatelloForemanEngine
                                   :distributions => [stub('family'  => 'Family',
                                                           'variant' => 'Variant',
                                                           'arch'    => 'Arch',
-                                                          'version' => 'Version')],
+                                                          'version' => 'Version',
+                                                          'files'  => [{:relativepath => 'images/pxeboot/vmlinuz'}])],
                                   :pulp_id => 'pulp_id',
                                   :uri     => 'https://example.com/repo/uri',
                                   :label   => 'label',
@@ -36,7 +37,7 @@ module KatelloForemanEngine
       end
 
       test "plans repository unpublish if no distros found for the repo" do
-        repo = stub(:distributions => [])
+        repo = stub(:unprotected => true, :distributions => [])
         action_class, arg = planned_actions(RepositoryChange, {}, repo).first
         assert_equal DistributionUnpublish, action_class
         assert_equal repo, arg
