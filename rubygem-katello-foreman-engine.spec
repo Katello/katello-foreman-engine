@@ -8,7 +8,7 @@
 
 Summary: Foreman specific parts of Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
-Version: 0.0.11
+Version: 0.0.12
 Release: 1%{?dist}
 Group: Development/Libraries
 License: GPLv2
@@ -84,6 +84,11 @@ GEMFILE
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Thu Oct 17 2013 Unknown name <inecas@redhat.com> 0.0.12-1
+- 1019484 - fix changesets demotion (inecas@redhat.com)
+- 976956 - create installation media only for bootable repos
+  (inecas@redhat.com)
+
 * Wed Oct 16 2013 Unknown name <inecas@redhat.com> 0.0.11-1
 - 1018919 - create puppet environment only for content views
   (inecas@redhat.com)
