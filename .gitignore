@@ -1,3 +1,4 @@
 Gemfile.lock
 test/katello_app
 .bundle
+.idea

@@ -26,6 +26,12 @@ module KatelloForemanEngine
           repo = repo.get_clone(changeset.environment)
           plan_action(RepositoryChange, repo)
         end
+        changeset.content_views.each do |content_view|
+          plan_action PuppetClassImport,
+                      content_view.organization.label,
+                      changeset.environment.label,
+                      content_view.label
+        end
       end
 
     end

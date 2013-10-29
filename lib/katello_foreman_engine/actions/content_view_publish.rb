@@ -28,6 +28,7 @@ module KatelloForemanEngine
         content_view.repos(content_view.organization.library).each do |repo|
           plan_action(RepositoryChange, repo)
         end
+        plan_action(PuppetClassImport, input['organization_label'], 'Library', input['label'])
       end
 
       input_format do

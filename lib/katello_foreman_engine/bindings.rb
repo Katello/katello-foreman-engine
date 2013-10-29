@@ -44,6 +44,10 @@ module KatelloForemanEngine
         resource(ForemanApi::Resources::Medium)
       end
 
+      def smart_proxy
+        resource(ForemanApi::Resources::SmartProxy)
+      end
+
       def user(username = nil)
         user_resource = resource(ForemanApi::Resources::User)
         if username && User.current.username == username
@@ -195,6 +199,11 @@ module KatelloForemanEngine
 
       def ptable_find(name)
         find_resource(ptable, %{name = "#{name}"})
+      end
+
+      def import_puppet_class(smart_proxy_id, environment_id)
+        environment.import_puppetclasses 'environment_id' => environment_id,
+                                         'id'             => smart_proxy_id
       end
 
       private
