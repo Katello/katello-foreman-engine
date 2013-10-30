@@ -36,10 +36,19 @@ module KatelloForemanEngine
       end
 
       def run
-        env, response = Bindings.environment_find(input['organization_label'],
-                                                  input['environment_label'],
-                                                  input['content_view_label'])
-        Bindings.import_puppet_class input['smart_proxy_id'], env.fetch('environment').fetch('id')
+        env, response   = Bindings.environment_find(input['organization_label'],
+                                                    input['environment_label'],
+                                                    input['content_view_label'])
+        env_id          = env.fetch('environment').fetch('id')
+        dryrun, _       = Bindings.import_puppet_class input['smart_proxy_id'], env_id, true
+        output['dryrun'] = dryrun
+        # run import only when it won't delete the environment
+        if dryrun.key?('results') && !dryrun.fetch('results').fetch('actions').include?('obsolete')
+          output['import_executed'] = true
+          Bindings.import_puppet_class input['smart_proxy_id'], env_id
+        else
+          output['import_executed'] = false
+        end
       end
     end
   end
