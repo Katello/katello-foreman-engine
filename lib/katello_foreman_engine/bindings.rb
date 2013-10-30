@@ -201,9 +201,10 @@ module KatelloForemanEngine
         find_resource(ptable, %{name = "#{name}"})
       end
 
-      def import_puppet_class(smart_proxy_id, environment_id)
+      def import_puppet_class(smart_proxy_id, environment_id, dryrun = false)
         environment.import_puppetclasses 'environment_id' => environment_id,
-                                         'id'             => smart_proxy_id
+                                         'id'             => smart_proxy_id,
+                                         'dryrun'         => dryrun
       end
 
       private
