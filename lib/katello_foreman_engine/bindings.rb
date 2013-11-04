@@ -202,9 +202,9 @@ module KatelloForemanEngine
       end
 
       def import_puppet_class(smart_proxy_id, environment_id, dryrun = false)
-        environment.import_puppetclasses 'environment_id' => environment_id,
-                                         'id'             => smart_proxy_id,
-                                         'dryrun'         => dryrun
+        params = { 'environment_id' => environment_id, 'id' => smart_proxy_id }
+        params.merge 'dryrun' => true if dryrun
+        environment.import_puppetclasses params
       end
 
       private
