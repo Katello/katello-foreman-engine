@@ -84,6 +84,9 @@ GEMFILE
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Mon Dec 16 2013 Justin Sherrill <jsherril@redhat.com> 0.0.10-2
+- backporting fix for bz 1043644 (jsherril@redhat.com)
+
 * Fri Oct 11 2013 Partha Aji <paji@redhat.com> 0.0.10-1
 
 * Fri Oct 11 2013 Partha Aji <paji@redhat.com> 0.0.9-1
