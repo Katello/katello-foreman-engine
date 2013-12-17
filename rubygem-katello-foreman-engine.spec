@@ -9,7 +9,7 @@
 Summary: Foreman specific parts of Katello
 Name: %{?scl_prefix}rubygem-%{gem_name}
 Version: 0.0.10
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: Development/Libraries
 License: GPLv2
 URL: http://github.com/Katello/katello-foreman-engine
